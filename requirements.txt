@@ -1,8 +1,8 @@
-asgiref==3.7.2
-dj-database-url
-Django==3.2.19
-gunicorn==20.1.0
-psycopg2-binary
-sqlparse==0.4.4
-typing_extensions==4.7.0
+asgiref==3.8.1
+dj-database-url==2.2.0
+Django==4.2.23
+gunicorn==23.0.0
+psycopg2-binary==2.9.12
 razorpay==1.4.2
+sqlparse==0.5.3
+whitenoise==6.9.0
