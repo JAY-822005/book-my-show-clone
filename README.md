@@ -1,239 +1,299 @@
-﻿Movie Ticket Booking Platform
+# 🎬 Movie Ticket Booking Platform
 
-A production-inspired Django web application for managing movie ticket reservations, show scheduling, theater operations, seat allocation, online payments, and user management. Built using Django, SQLite/PostgreSQL, Bootstrap, and Razorpay.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Django](https://img.shields.io/badge/Django-Framework-success)
+![SQLite](https://img.shields.io/badge/Database-SQLite-blue)
+![Bootstrap](https://img.shields.io/badge/Frontend-Bootstrap-purple)
+![Razorpay](https://img.shields.io/badge/Payment-Razorpay-informational)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-Designed to simulate the backend architecture of modern online ticket booking platforms while following modular Django application design.
+A production-inspired Django web application for managing movie ticket reservations, theater scheduling, seat allocation, user authentication, and online payments.
 
-Core Features
-User Authentication & Authorization
-Movie Catalog Management
-Theater & Screen Management
-Show Scheduling
-Real-time Seat Reservation
-Booking & Ticket Generation
-Razorpay Payment Integration
-Booking History
-Email Notifications
-Django Admin Dashboard
-Responsive User Interface
+The project demonstrates how a real-world ticket booking platform can be structured using Django's modular architecture, separating authentication, booking, movie management, and payment workflows into independent components.
 
-The application separates booking workflows, payment processing, authentication, and content management into independent modules, making the system easier to maintain and extend.
+---
 
-Project Structure
+## ✨ Features
+
+- User Registration & Authentication
+- Browse Movies & Show Details
+- Theater & Show Management
+- Seat Selection & Booking
+- Razorpay Payment Integration
+- Booking Confirmation
+- Booking History
+- Email Notifications
+- Django Admin Dashboard
+- Responsive User Interface
+
+---
+
+# 🏗️ System Architecture
+
+```mermaid
+flowchart LR
+
+Client[Browser]
+
+Templates[Django Templates]
+
+Views[Views]
+
+Models[Models]
+
+ORM[Django ORM]
+
+DB[(SQLite Database)]
+
+Client --> Templates
+Templates --> Views
+Views --> Models
+Models --> ORM
+ORM --> DB
+```
+
+---
+
+# 🔄 Booking Workflow
+
+```mermaid
+flowchart TD
+
+A[User]
+B[Browse Movies]
+C[Select Theater]
+D[Choose Show]
+E[Select Seats]
+F[Razorpay Payment]
+G[Booking Confirmation]
+H[Generate Ticket]
+
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G --> H
+```
+
+---
+
+# 💳 Payment Flow
+
+```mermaid
+flowchart TD
+
+A[Booking Request]
+B[Create Razorpay Order]
+C[Razorpay Checkout]
+D{Payment Successful?}
+E[Verify Payment]
+F[Store Booking]
+G[Generate Ticket]
+H[Payment Failed]
+
+A --> B
+B --> C
+C --> D
+D -->|Yes| E
+E --> F
+F --> G
+D -->|No| H
+```
+
+---
+
+## 📂 Project Structure
+
+```text
 bookmyshow-clone/
-
 │
-
-├── accounts/
-
-├── bookings/
-
 ├── movies/
-
-├── payments/
-
-├── theaters/
-
+├── bookings/
 ├── users/
-
 ├── templates/
-
 ├── static/
-
 ├── media/
-
+├── project/
 │
-
-├── config/
-
-│
-
 ├── manage.py
-
 ├── requirements.txt
+├── README.md
+└── .env
+```
 
-├── db.sqlite3
+---
 
-├── .env
+## 🛠️ Technology Stack
 
-└── README.md
+| Category | Technology |
+|----------|------------|
+| Language | Python 3.11 |
+| Framework | Django |
+| Database | SQLite |
+| ORM | Django ORM |
+| Frontend | HTML5, CSS3, Bootstrap, JavaScript |
+| Payment | Razorpay |
+| Image Processing | Pillow |
+| Version Control | Git & GitHub |
 
+---
 
-Tech Stack
-Python 3.11
-Django
-SQLite (Development)
-PostgreSQL (Production Ready)
-Razorpay Payment Gateway
-HTML5
-CSS3
-Bootstrap
-JavaScript
-Django ORM
-Django Authentication
-Pillow
-Architecture Overview
-Modular Django Architecture
-
-The application follows Django's modular app architecture, where each business domain is isolated into its own application.
-
-Examples include:
-
-Authentication
-Movie Management
-Theater Management
-Booking Engine
-Payment Processing
-User Profiles
-
-Each module owns its:
-
-Models
-Views
-URLs
-Templates
-Business Logic
-
-This separation improves maintainability and scalability.
-
-Booking Workflow
-
-User
-
-   │
-   
-   ▼
-   
-Browse Movies
-
-   │
-   
-Select Theater
-
-   │
-   
-Choose Show
-
-   │
-   
-Seat Selection
-
-   │
-   
-Payment Gateway
-
-   │
-   
-Booking Confirmation
-
-   │
-   
-Ticket Generation
-Layered Backend Design
-Presentation Layer
-
-   │
-        
-Django Templates
-
-   │
-        
-───────────────
-Business Logic
-(Views & Services)
-───────────────
-
-   │
-        
-Django ORM
-
-   │
-        
-Database
-
-(SQLite/PostgreSQL)
-
-Payment Architecture
-
-The payment module is designed independently from the booking engine.
-
-Booking Request
-
-       │
-       
-       ▼
-       
-Payment Service
-
-       │
-       
- Razorpay
- 
-       │
-       
-Verification
-
-       │
-       
-Booking Confirmation
-
-
-This allows future migration to Stripe, PayPal, or other payment providers without changing booking logic.
-
-Authentication
-Django Authentication System
-Session-based Authentication
-Role-based Admin Access
-Protected Booking Routes
-Database Design
+## 🗄️ Database Design
 
 Core entities include:
 
-Users
-Movies
-Theaters
-Screens
-Shows
-Seats
-Bookings
-Payments
+- Users
+- Movies
+- Theaters
+- Screens
+- Shows
+- Seats
+- Bookings
+- Payments
 
-The relationships follow normalized relational database principles using Django ORM.
+The application uses Django ORM with normalized relational database design to manage relationships between these entities.
 
-Future Improvements
+---
 
-Planned enhancements:
+## 🚀 Getting Started
 
-PostgreSQL Migration
-Docker Support
-Redis Caching
-Celery Background Tasks
-Email Queue
-Seat Locking with Redis
-Booking Expiration
-Recommendation Engine
-JWT REST API
-React Frontend
-CI/CD Pipeline
-Kubernetes Deployment
-Monitoring & Logging
-AI Movie Recommendation System
-LLM-powered Customer Support Chatbot
-Why This Project Matters
+### Clone the repository
 
-This project goes beyond basic CRUD operations by implementing core backend workflows commonly found in ticket booking platforms.
+```bash
+git clone https://github.com/your-username/bookmyshow-clone.git
+cd bookmyshow-clone
+```
 
-It demonstrates practical experience with:
+### Create a virtual environment
 
-Authentication & Authorization
-Relational Database Design
-Booking Workflow Management
-Payment Gateway Integration
-Transaction Handling
-Modular Django Architecture
-Session Management
-Media Upload Handling
-Admin Operations
-Production-style Backend Organization
+```bash
+python -m venv .venv
+```
 
-The project is built to showcase backend engineering principles while providing a solid foundation for future AI-powered enhancements.
+### Activate virtual environment
+
+**Windows**
+
+```bash
+.venv\Scripts\activate
+```
+
+**Linux/macOS**
+
+```bash
+source .venv/bin/activate
+```
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Apply migrations
+
+```bash
+python manage.py migrate
+```
+
+### Create an admin account
+
+```bash
+python manage.py createsuperuser
+```
+
+### Run the development server
+
+```bash
+python manage.py runserver
+```
+
+Visit:
+
+```
+http://127.0.0.1:8000
+```
+
+Admin Panel:
+
+```
+http://127.0.0.1:8000/admin
+```
+
+---
+
+## 📸 Screenshots
+
+> Screenshots will be added after deployment.
+
+```
+screenshots/
+├── home.png
+├── movie-details.png
+├── booking.png
+└── admin-dashboard.png
+```
+
+---
+
+## 🔮 Future Improvements
+
+- PostgreSQL Support
+- Docker Containerization
+- Redis Caching
+- Celery Background Tasks
+- Email Queue
+- Booking Expiration
+- Seat Locking Mechanism
+- JWT Authentication
+- REST API
+- React Frontend
+- GitHub Actions CI/CD
+- Production Deployment
+- AI Movie Recommendation System
+- AI Booking Assistant
+
+---
+
+## 💡 Learning Objectives
+
+This project was built to strengthen backend engineering concepts including:
+
+- Django Project Structure
+- Authentication & Authorization
+- Relational Database Design
+- Django ORM
+- Payment Gateway Integration
+- Session Management
+- Booking Workflow Design
+- Admin Dashboard Management
+- Modular Backend Architecture
+- Production-Oriented Development
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+Feel free to fork the repository, create a feature branch, and submit a pull request.
+
+---
+
+## 📄 License
+
+This project is intended for educational and portfolio purposes.
+
+MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Jay Prajapati**
+
+GitHub: https://github.com/JAY-822005
+
+LinkedIn: https://www.linkedin.com/in/jay-prajapati-760177311/
