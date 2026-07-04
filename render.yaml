@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: bookmyshow-backend
+    env: python
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn bookmyseat.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
