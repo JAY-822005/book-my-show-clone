@@ -1,0 +1,26 @@
+{% extends "users/basic.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-danger">
+        <div class="card-body text-center py-5">
+          <i class="fas fa-times-circle fa-4x text-danger mb-3"></i>
+          <h3>Payment Failed</h3>
+          <p class="text-muted">
+            Your payment couldn't be completed, or your seat hold expired before
+            checkout finished. No money has been deducted for this attempt.
+          </p>
+
+          <a href="{% url 'theater_list' order.theater.movie.id %}" class="btn btn-primary mt-3">
+            <i class="fas fa-redo me-2"></i> Try Again
+          </a>
+          <a href="{% url 'movie_list' %}" class="btn btn-outline-secondary mt-3">
+            Back to Movies
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

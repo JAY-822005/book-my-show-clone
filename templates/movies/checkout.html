@@ -1,0 +1,135 @@
+{% extends "users/basic.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> Order Summary</h5>
+          <span id="countdown-badge" class="badge badge-warning">
+            <i class="fas fa-clock"></i> <span id="countdown-text">--:--</span>
+          </span>
+        </div>
+        <div class="card-body">
+          <h4>{{ order.theater.movie.name }}</h4>
+          <p class="text-muted mb-1">
+            <i class="fas fa-building"></i> {{ order.theater.name }}
+            &nbsp;|&nbsp;
+            <i class="far fa-clock"></i> {{ order.theater.time }}
+          </p>
+          <p class="mb-1"><strong>Seats:</strong> {{ order.seat_numbers }}</p>
+          <p class="mb-1"><strong>Tickets:</strong> {{ seats|length }} x ₹{{ order.theater.price }}</p>
+          <hr>
+          <h5 class="d-flex justify-content-between">
+            <span>Total Payable</span>
+            <span class="text-success">₹{{ order.amount }}</span>
+          </h5>
+        </div>
+      </div>
+
+      <div id="hold-warning" class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        Your seats are held for you. Complete payment before the timer runs out
+        or they'll be released back to other customers.
+      </div>
+
+      {% if not gateway_configured %}
+      <div class="alert alert-warning">
+        <i class="fas fa-flask me-2"></i>
+        <strong>Demo mode:</strong> No Razorpay keys are configured on the server,
+        so this will simulate a successful payment instead of opening a real
+        checkout. Add <code>RAZORPAY_KEY_ID</code> / <code>RAZORPAY_KEY_SECRET</code>
+        to go live.
+      </div>
+      {% endif %}
+
+      <form id="payment-form" method="POST" action="{% url 'payment_callback' %}">
+        {% csrf_token %}
+        <input type="hidden" name="order_id" value="{{ order.id }}">
+        <input type="hidden" name="razorpay_payment_id" id="id_razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="id_razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="id_razorpay_signature">
+
+        <button type="button" id="pay-button" class="btn btn-success btn-lg btn-block">
+          <i class="fas fa-lock me-2"></i> Pay ₹{{ order.amount }} Securely
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  // ── Countdown timer for the seat hold ──────────────────────────────
+  let secondsLeft = {{ seconds_left }};
+  const countdownText = document.getElementById('countdown-text');
+  const countdownBadge = document.getElementById('countdown-badge');
+
+  function renderCountdown() {
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    countdownText.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    if (secondsLeft <= 60) {
+      countdownBadge.classList.remove('badge-warning');
+      countdownBadge.classList.add('badge-danger');
+    }
+  }
+  renderCountdown();
+
+  const timerId = setInterval(function () {
+    secondsLeft -= 1;
+    if (secondsLeft <= 0) {
+      clearInterval(timerId);
+      countdownText.textContent = "Expired";
+      document.getElementById('pay-button').disabled = true;
+      const warning = document.getElementById('hold-warning');
+      warning.classList.remove('alert-info');
+      warning.classList.add('alert-danger');
+      warning.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i> Your seat hold expired. Please go back and select seats again.';
+      return;
+    }
+    renderCountdown();
+  }, 1000);
+
+  // ── Payment trigger ─────────────────────────────────────────────────
+  document.getElementById('pay-button').addEventListener('click', function () {
+    {% if gateway_configured %}
+    const options = {
+      "key": "{{ razorpay_key }}",
+      "amount": "{{ amount_paise }}",
+      "currency": "INR",
+      "name": "BookMySeat",
+      "description": "{{ order.theater.movie.name }} - {{ order.theater.name }}",
+      "order_id": "{{ order.razorpay_order_id }}",
+      "handler": function (response) {
+        document.getElementById('id_razorpay_payment_id').value = response.razorpay_payment_id;
+        document.getElementById('id_razorpay_order_id').value = response.razorpay_order_id;
+        document.getElementById('id_razorpay_signature').value = response.razorpay_signature;
+        document.getElementById('payment-form').submit();
+      },
+      "prefill": {
+        "name": "{{ request.user.username }}",
+        "email": "{{ request.user.email }}"
+      },
+      "theme": { "color": "#28a745" },
+      "modal": {
+        "ondismiss": function () {
+          console.log('Checkout closed by user without paying.');
+        }
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function () {
+      window.location.href = "{% url 'payment_failed' order.id %}";
+    });
+    rzp.open();
+    {% else %}
+    // Demo mode: skip the real gateway and submit straight to the callback,
+    // which auto-approves when no gateway keys are configured.
+    document.getElementById('payment-form').submit();
+    {% endif %}
+  });
+</script>
+{% endblock %}
