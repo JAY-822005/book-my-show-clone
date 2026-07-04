@@ -21,26 +21,43 @@ The application separates booking workflows, payment processing, authentication,
 
 Project Structure
 bookmyshow-clone/
+
 │
+
 ├── accounts/
+
 ├── bookings/
+
 ├── movies/
+
 ├── payments/
+
 ├── theaters/
+
 ├── users/
+
 ├── templates/
+
 ├── static/
+
 ├── media/
+
 │
+
 ├── config/
+
 │
+
 ├── manage.py
+
 ├── requirements.txt
+
 ├── db.sqlite3
+
 ├── .env
+
 └── README.md
 
-(Adjust the folders to match your actual project before publishing.)
 
 Tech Stack
 Python 3.11
@@ -80,50 +97,86 @@ Business Logic
 This separation improves maintainability and scalability.
 
 Booking Workflow
+
 User
+
    │
+   
    ▼
+   
 Browse Movies
+
    │
+   
 Select Theater
+
    │
+   
 Choose Show
+
    │
+   
 Seat Selection
+
    │
+   
 Payment Gateway
+
    │
+   
 Booking Confirmation
+
    │
+   
 Ticket Generation
 Layered Backend Design
 Presentation Layer
-        │
+
+   │
+        
 Django Templates
-        │
+
+   │
+        
 ───────────────
 Business Logic
 (Views & Services)
 ───────────────
-        │
+
+   │
+        
 Django ORM
-        │
+
+   │
+        
 Database
+
 (SQLite/PostgreSQL)
+
 Payment Architecture
 
 The payment module is designed independently from the booking engine.
 
 Booking Request
+
        │
+       
        ▼
+       
 Payment Service
+
        │
+       
  Razorpay
+ 
        │
+       
 Verification
+
        │
+       
 Booking Confirmation
+
 
 This allows future migration to Stripe, PayPal, or other payment providers without changing booking logic.
 
