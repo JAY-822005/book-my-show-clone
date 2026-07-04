@@ -6,3 +6,4 @@ psycopg2-binary==2.9.12
 razorpay==1.4.2
 sqlparse==0.5.3
 whitenoise==6.9.0
+Pillow==11.3.0
